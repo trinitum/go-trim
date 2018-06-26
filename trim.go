@@ -2,6 +2,7 @@ package trim
 
 import (
 	"fmt"
+	"strings"
 	"unicode"
 )
 
@@ -122,4 +123,13 @@ func (rs *RuneSet) addRange32(lo, hi uint32) error {
 	r32 = append(r32, rs.R32[i:]...)
 	rs.R32 = r32
 	return nil
+}
+
+func (rs *RuneSet) Trim(s string) string {
+	return strings.Map(func(r rune) rune {
+		if rs.Includes(r) {
+			return r
+		}
+		return -1
+	}, s)
 }

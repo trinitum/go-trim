@@ -5,6 +5,30 @@ import (
 	"testing"
 )
 
+func TestTrim(t *testing.T) {
+	tcs := []struct {
+		rset string
+		in   string
+		out  string
+	}{
+		{
+			rset: "a-z",
+			in:   "Hello, World!",
+			out:  "elloorld",
+		},
+	}
+	for _, tc := range tcs {
+		rset, err := MakeRuneSet(tc.rset)
+		if err != nil {
+			t.Fatalf("couldn't compile %s", tc.rset)
+		}
+		out := rset.Trim(tc.in)
+		if out != tc.out {
+			t.Errorf("expected %s but got %s", tc.out, out)
+		}
+	}
+}
+
 func TestMakeRuneSet(t *testing.T) {
 	tcs := []struct {
 		rset string
