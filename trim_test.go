@@ -18,7 +18,7 @@ func TestTrim(t *testing.T) {
 		},
 	}
 	for _, tc := range tcs {
-		rset, err := MakeRuneSet(tc.rset)
+		rset, err := NewRuneSet(tc.rset)
 		if err != nil {
 			t.Fatalf("couldn't compile %s", tc.rset)
 		}
@@ -91,7 +91,7 @@ func TestMakeRuneSet(t *testing.T) {
 		},
 	}
 	for _, tc := range tcs {
-		rset, err := MakeRuneSet(tc.rset)
+		rset, err := NewRuneSet(tc.rset)
 		if tc.err != "" {
 			if err == nil || !strings.Contains(err.Error(), tc.err) {
 				t.Errorf("expected error %v to contain: %s", err, tc.err)

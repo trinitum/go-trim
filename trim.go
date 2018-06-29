@@ -1,3 +1,5 @@
+// Package trim provides functions to create sets of characters and trim
+// strings removing characters outside of the specified set
 package trim
 
 import (
@@ -12,13 +14,20 @@ const (
 	surrogateMax = 0xDFFF
 )
 
+// RuneSet represents a set of characters
 type RuneSet unicode.RangeTable
 
+// Includes checks if character is in the set
 func (rs *RuneSet) Includes(r rune) bool {
 	return unicode.Is((*unicode.RangeTable)(rs), r)
 }
 
-func MakeRuneSet(chars string) (*RuneSet, error) {
+// NewRuneSet creates a new set from the provided string. String may list
+// individual characters or ranges specified as two characters separated with
+// '-'. If you want to include '-' specify it as the first or the last
+// character. For example "0-9aeiou-" will create a set including digits from 0
+// to 9, a, e, i, o, u, and '-'.
+func NewRuneSet(chars string) (*RuneSet, error) {
 	rs := &RuneSet{}
 	var state int
 	var lr rune
@@ -125,6 +134,8 @@ func (rs *RuneSet) addRange32(lo, hi uint32) error {
 	return nil
 }
 
+// Trim returns a string that is a copy of s with all characters that are not
+// in the set removed.
 func (rs *RuneSet) Trim(s string) string {
 	return strings.Map(func(r rune) rune {
 		if rs.Includes(r) {
