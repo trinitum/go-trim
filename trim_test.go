@@ -1,9 +1,20 @@
 package trim
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 )
+
+func Example() {
+	rset, err := NewRuneSet("a-zA-Z")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(rset.Trim("Hello, World!"))
+	// Output:
+	// HelloWorld
+}
 
 func TestTrim(t *testing.T) {
 	tcs := []struct {
