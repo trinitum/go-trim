@@ -22,6 +22,16 @@ func (rs *RuneSet) Includes(r rune) bool {
 	return unicode.Is((*unicode.RangeTable)(rs), r)
 }
 
+// NewRuneSetMust creates a new set just as NewRuneSet, but in case of error it
+// panics instead of returning an error
+func NewRuneSetMust(chars string) *RuneSet {
+	rset, err := NewRuneSet(chars)
+	if err != nil {
+		panic(err)
+	}
+	return rset
+}
+
 // NewRuneSet creates a new set from the provided string. String may list
 // individual characters or ranges specified as two characters separated with
 // '-'. If you want to include '-' specify it as the first or the last

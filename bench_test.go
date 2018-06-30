@@ -18,10 +18,7 @@ func BenchmarkTrims(b *testing.B) {
 		}
 		return r
 	}
-	rset, err := NewRuneSet("a-zA-Z0-9_.-")
-	if err != nil {
-		panic(err)
-	}
+	rset := NewRuneSetMust("a-zA-Z0-9_.-")
 
 	benchs := []struct {
 		name string
