@@ -18,6 +18,12 @@ func BenchmarkTrims(b *testing.B) {
 		}
 		return r
 	}
+	checkFunc := func(r rune) rune {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '_' || r == '.' || r == '-' {
+			return r
+		}
+		return -1
+	}
 	rset := NewRuneSetMust("a-zA-Z0-9_.-")
 
 	benchs := []struct {
@@ -29,19 +35,13 @@ func BenchmarkTrims(b *testing.B) {
 			f:    func(in string) string { return re.ReplaceAllString(in, "") },
 		},
 		{
-			name: "Check runes",
+			name: "strings.Map(with if)",
 			f: func(in string) string {
-				res := make([]rune, 0)
-				for _, r := range in {
-					if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || r == '_' || r == '.' || r == '-' {
-						res = append(res, r)
-					}
-				}
-				return string(res)
+				return strings.Map(checkFunc, in)
 			},
 		},
 		{
-			name: "strings.Map",
+			name: "strings.Map(IndexRune)",
 			f: func(in string) string {
 				return strings.Map(mapFunc, in)
 			},
