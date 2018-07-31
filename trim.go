@@ -9,7 +9,6 @@ import (
 )
 
 const (
-	maxRune      = '\U0010FFFF'
 	surrogateMin = 0xD800
 	surrogateMax = 0xDFFF
 )
