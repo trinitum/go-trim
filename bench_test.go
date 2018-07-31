@@ -13,7 +13,7 @@ func BenchmarkTrims(b *testing.B) {
 	re := regexp.MustCompile(`[^a-zA-Z0-9_.-]`)
 	chars := "abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789_.-"
 	mapFunc := func(r rune) rune {
-		if strings.IndexRune(chars, r) < 0 {
+		if !strings.ContainsRune(chars, r) {
 			return -1
 		}
 		return r
