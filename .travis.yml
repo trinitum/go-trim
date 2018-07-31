@@ -3,3 +3,9 @@ go:
   - 1.9
   - "1.10.x"
   - tip
+before_script:
+  - go get -u gopkg.in/alecthomas/gometalinter.v2
+  - gometalinter.v2 --install
+script:
+  - go test -v -race ./...
+  - gometalinter.v2 --disable errcheck --disable vetshadow --cyclo-over=15 --deadline=30s
