@@ -32,6 +32,14 @@ func NewRuneSetMust(chars string) *RuneSet {
 	return rset
 }
 
+type rsState int
+
+const (
+	stateNew rsState = iota
+	stateHaveRune
+	stateRange
+)
+
 // NewRuneSet creates a new set from the provided string. String may list
 // individual characters or ranges specified as two characters separated with
 // '-'. If you want to include '-' specify it as the first or the last
@@ -39,10 +47,10 @@ func NewRuneSetMust(chars string) *RuneSet {
 // to 9, a, e, i, o, u, and '-'.
 func NewRuneSet(chars string) (*RuneSet, error) {
 	rs := &RuneSet{}
-	var state int
+	var state rsState
 	var lr rune
 	for _, r := range chars {
-		if state == 2 {
+		if state == stateRange {
 			if r < lr {
 				return nil, fmt.Errorf("invalid range %s-%s in rune set %s", string(lr), string(r), chars)
 			}
@@ -52,28 +60,27 @@ func NewRuneSet(chars string) (*RuneSet, error) {
 			if err := rs.addRange(lr, r); err != nil {
 				return nil, err
 			}
-			state = 0
+			state = stateNew
 			continue
 		}
-		if state == 1 {
+		if state == stateHaveRune {
 			if r == '-' {
-				state = 2
+				state = stateRange
 				continue
 			}
 			if err := rs.addRange(lr, lr); err != nil {
 				return nil, err
 			}
-			state = 0
 		}
 		lr = r
-		state = 1
+		state = stateHaveRune
 	}
-	if state > 0 {
+	if state != stateNew {
 		if err := rs.addRange(lr, lr); err != nil {
 			return nil, err
 		}
 	}
-	if state == 2 {
+	if state == stateRange {
 		if err := rs.addRange('-', '-'); err != nil {
 			return nil, err
 		}
